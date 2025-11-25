@@ -1,0 +1,452 @@
+<?php $__env->startSection('page', __('admin.Supplier Invoices')); ?>
+
+
+<?php $__env->startSection('contant'); ?>
+
+
+
+
+    <!-- Content wrapper -->
+    <div class="content-wrapper">
+
+        <!-- Content -->
+
+        <div class="container-xxl flex-grow-1 container-p-y">
+
+            <!-- Order List Widget -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="row gy-4 gy-sm-1">
+                        <div class="col-sm-6 col-lg-3">
+                            <div
+                                class="d-flex justify-content-between align-items-start card-widget-1 border-end pb-3 pb-sm-0">
+                                <div>
+                                    <h3 class="mb-2"> <?php echo e(number_format($totalAmount ?? 0, 2)); ?> </h3>
+
+                                    <p class="mb-0"><?php echo e(__('admin.Total Invoices')); ?></p>
+                                </div>
+                                <div class="avatar me-sm-4">
+                                    <span class="avatar-initial rounded bg-label-secondary">
+                                        <i class="bx bx-calendar bx-sm"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+                        <div class="col-sm-6 col-lg-3">
+                            <div
+                                class="d-flex justify-content-between align-items-start border-end pb-3 pb-sm-0 card-widget-3">
+                                <div>
+                                    <h3 class="mb-2"><?php echo e(number_format($totalReturn ?? 0, 2)); ?> </h3>
+                                    <p class="mb-0"><?php echo e(__('admin.Returns')); ?></p>
+                                </div>
+                                <div class="avatar me-sm-4">
+                                    <span class="avatar-initial rounded bg-label-secondary">
+                                        <i class="bx bx-wallet bx-sm"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-sm-6 col-lg-3">
+                            <div
+                                class="d-flex justify-content-between align-items-start card-widget-2 border-end pb-3 pb-sm-0">
+                                <div>
+                                    <h3 class="mb-2"><?php echo e(number_format($monthlyAmount ?? 0, 2)); ?> </h3>
+                                    <p class="mb-0"><?php echo e(__('admin.Paid')); ?></p>
+                                </div>
+                                <div class="avatar me-lg-4">
+                                    <span class="avatar-initial rounded bg-label-secondary">
+                                        <i class="bx bx-check-double bx-sm"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="col-sm-6 col-lg-3">
+                            <div class="d-flex justify-content-between align-items-start   pb-3 pb-sm-0 card-widget-3">
+                                <div>
+                                    <h3 class="mb-2"> <?php echo e(number_format($todayAmount ?? 0, 2)); ?> </h3>
+                                    <p class="mb-0"><?php echo e(__('admin.Current Balance')); ?></p>
+                                </div>
+                                <div class="avatar me-sm-4">
+                                    <span class="avatar-initial rounded bg-label-secondary">
+                                        <i class="bx bx-wallet bx-sm"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product List Table -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="card-title"><?php echo e(__('admin.Supplier Invoices')); ?></h5>
+
+                        <?php if(request('id')): ?>
+                            <div class="d-flex gap-2">
+                                <a href="<?php echo e(route('supplier_returns.index', ['id' => request('id')])); ?>"
+                                    class="btn btn-warning">
+                                    <i class="bx bx-refresh"></i> <?php echo e(__('admin.View Returns')); ?>
+
+                                </a>
+
+                                <a href="<?php echo e(route('supplier_payments.index', ['supplier_id' => request('id')])); ?>"
+                                    class="btn btn-warning">
+                                    <i class="bx bx-refresh"></i> <?php echo e(__('admin.View Payments')); ?>
+
+                                </a>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+
+
+
+
+
+                    <div class="d-flex justify-content-between align-items-center row py-3 gap-3 gap-md-0">
+
+
+                        
+
+
+                        <?php if(session('success')): ?>
+                            <div id="success-message" class="alert alert-success alert-dismissible fade show text-center"
+                                role="alert">
+                                <?php echo e(session('success')); ?>
+
+                            </div>
+                        <?php endif; ?>
+
+                        <?php if(session('error')): ?>
+                            <div id="danger-message" class="alert alert-danger alert-dismissible fade show text-center"
+                                role="alert">
+                                <?php echo e(session('error')); ?>
+
+                            </div>
+                        <?php endif; ?>
+
+
+
+                        <?php if($errors->any()): ?>
+                            <div class="alert alert-danger">
+                                <ul>
+                                    
+                                    <?php $__currentLoopData = $errors->all(); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $error): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <li><?php echo e($error); ?></li>
+                                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                                </ul>
+                            </div>
+                        <?php endif; ?>
+                        
+
+
+                    </div>
+
+                </div>
+
+                <!-- customers List Table -->
+                <div class="card">
+
+                    <div class="card-datatable table-responsive">
+                        <div id="products-table_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
+                            <div class="card-header d-flex border-top rounded-0 flex-wrap py-md-0">
+
+
+                                
+
+
+
+                                <form method="GET" action="<?php echo e(route('supplier_invoice.index')); ?>">
+                                    <div class="row g-2 mb-4">
+                                        <input type="hidden" name="id" value="<?php echo e($id); ?>">
+
+                                        <!-- البحث -->
+                                        <div class="col-12 col-md-4 d-flex align-items-end">
+                                            <input type="search" name="search" value="<?php echo e(request('search')); ?>"
+                                                class="form-control" placeholder="<?php echo e(__('admin.Search')); ?>">
+                                        </div>
+
+                                        <!-- التاريخ من -->
+                                        <div class="col-12 col-md-3">
+                                            <label for="date_from" class="form-label"><?php echo e(__('admin.From Date')); ?></label>
+                                            <input type="date" name="date_from" id="date_from"
+                                                value="<?php echo e(request('date_from')); ?>" class="form-control">
+                                        </div>
+
+                                        <!-- التاريخ إلى -->
+                                        <div class="col-12 col-md-3">
+                                            <label for="date_to" class="form-label"><?php echo e(__('admin.To Date')); ?></label>
+                                            <input type="date" name="date_to" id="date_to"
+                                                value="<?php echo e(request('date_to')); ?>" class="form-control">
+                                        </div>
+
+                                        <!-- زر البحث -->
+                                        <div class="col-12 col-md-2 d-flex align-items-end">
+                                            <button type="submit" class="btn btn-primary w-100 mt-3">
+                                                <?php echo __('admin.Submit'); ?>
+
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+
+
+                                
+
+
+
+
+
+
+
+                                
+
+
+
+                                <div class="d-flex justify-content-start justify-content-md-end align-items-baseline">
+                                    <div
+                                        class="dt-action-buttons d-flex align-items-start align-items-md-center justify-content-sm-center mb-3 mb-sm-0">
+
+                                        <div class="dt-buttons btn-group flex-wrap"> <button
+                                                class="btn btn-secondary add-new btn-danger de me-3" tabindex="0"
+                                                aria-controls="products-table" type="button" data-bs-toggle="modal"
+                                                data-bs-target="#basicModal2" style="display:none"><span><i
+                                                        class="bx bx-trash"></i><span
+                                                        class="d-none d-sm-inline-block"><?php echo e(__('admin.Delete')); ?>
+
+                                                    </span></span></button>
+
+                                            <a href="<?php echo e(route('supplier_invoice.create')); ?>?id=<?php echo e($id); ?>">
+
+                                                <button class="btn btn-secondary add-new btn-primary ms-2" tabindex="0"
+                                                    aria-controls="products-table" type="button"
+                                                    data-bs-toggle="offcanvas"
+                                                    data-bs-target="#offcanvasEcommerceCategoryList"><span><i
+                                                            class="bx bx-plus me-0 me-sm-1"></i><?php echo e(__('admin.Add Invoice')); ?></span></button>
+
+                                            </a>
+
+                                            <a
+                                                href="<?php echo e(route('supplier_returns.create', ['supplier_id' => request('id')])); ?>">
+
+                                                <button class="btn btn-secondary add-new btn-primary ms-2" tabindex="0"
+                                                    aria-controls="products-table" type="button"
+                                                    data-bs-toggle="offcanvas"
+                                                    data-bs-target="#offcanvasEcommerceCategoryList"><span><i
+                                                            class="bx bx-plus me-0 me-sm-1"></i><?php echo e(__('admin.Add Return')); ?></span></button>
+
+                                            </a>
+
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                                
+
+
+                            </div>
+
+
+                        </div>
+                        <table id="products-table"
+                            class="datatables-products table border-top dataTable no-footer dtr-column">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <th><?php echo e(__('admin.Invoice Number')); ?></th>
+                                    <th><?php echo e(__('admin.Supplier')); ?></th>
+                                    <th><?php echo e(__('admin.Invoice Date')); ?></th>
+                                    <th><?php echo e(__('admin.Total')); ?></th>
+                                    <th><?php echo e(__('admin.Actions')); ?></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                
+                                
+
+                                <?php $__currentLoopData = $invoices; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $invoice): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                    <tr class="odd">
+                                        <td>
+                                            <input type="checkbox" value="<?php echo e($invoice->id); ?>"
+                                                onclick="data('dt-checkboxes')" class="dt-checkboxes form-check-input">
+
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" value="<?php echo e($invoice->id); ?>"
+                                                onclick="data('dt-checkboxes')" class="dt-checkboxes form-check-input">
+
+
+
+                                        <td><?php echo e($invoice->id); ?></td>
+                                        <td><?php echo e($invoice->supplier->name ?? '-'); ?></td>
+                                        <td><?php echo e($invoice->date); ?></td>
+                                        <td><?php echo e(number_format($invoice->total, 2)); ?></td>
+
+
+
+                                        <td>
+                                            <div class="d-inline-block text-nowrap">
+                                                <a href="<?php echo e(route('supplier_invoice.edit', $invoice->id)); ?>">
+                                                    <button class="btn btn-sm btn-icon" title="<?php echo e(__('admin.Edit')); ?>">
+                                                        <i class="bx bx-edit"></i>
+                                                    </button>
+                                                </a>
+                                                <a href="<?php echo e(route('supplier_invoice.show', $invoice->id)); ?>">
+                                                    <button class="btn btn-sm btn-icon" title="<?php echo e(__('admin.Show')); ?>">
+                                                        <i class="bx bx-show"></i>
+                                                    </button>
+                                                </a>
+
+                                                <a href="<?php echo e(route('supplier_invoice.print2', $invoice->id)); ?>">
+                                                    <button class="btn btn-sm btn-icon" title="<?php echo e(__('admin.Print')); ?>">
+                                                        <i class="bx bxs-printer"></i>
+                                                    </button>
+                                                </a>
+                                                <a href="<?php echo e(route('supplier_invoice.print3', $invoice->id)); ?>">
+                                                    <button class="btn btn-sm btn-icon" title="<?php echo e(__('admin.Print')); ?>">
+                                                        <i class="bx bxs-printer"></i>1
+                                                    </button>
+                                                </a>
+
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+                            </tbody>
+                        </table>
+                        <div class="row mx-2">
+                            <?php echo e($invoices->links('vendor.pagination.bootstrap-5')); ?>
+
+                        </div>
+                        <script>
+                            $(document).ready(function() {
+                                var table = $('#products-table').DataTable({
+                                    columnDefs: [{
+                                            className: "control",
+                                            searchable: false,
+                                            orderable: false,
+                                            responsivePriority: 2,
+                                            targets: 0,
+                                            render: function(t, e, s, a) {
+                                                // console.log(s)
+                                                return ""
+                                            }
+
+                                        },
+                                        {
+                                            targets: 1,
+
+                                            checkboxes: {
+                                                selectAllRender: '<input type="checkbox" onclick="data1(`all`)" class="all form-check-input">'
+                                            },
+                                            render: function(t, e, s, a) {
+                                                // console.log(s[0])
+                                                return s[0];
+                                            },
+                                            searchable: !1
+                                        }
+                                    ],
+
+
+                                    responsive: {
+                                        details: {
+                                            display: $.fn.dataTable.Responsive.display.modal({
+                                                header: function(row) {
+                                                    return '<?php echo e(__('admin.Details of')); ?> ' + row
+                                                        .data()[1];
+                                                }
+                                            }),
+                                            type: "column",
+                                            renderer: function(api, rowIdx, columns) {
+                                                var data = $.map(columns, function(col, i) {
+                                                    return col.title ?
+                                                        `<tr><td><strong>${col.title}:</strong></td><td>${col.data}</td></tr>` :
+                                                        '';
+                                                }).join('');
+                                                return data ? $('<table class="table"/>').append('<tbody>' + data +
+                                                    '</tbody>') : false;
+                                            }
+                                        }
+                                    },
+                                    paging: false, // 🚫 إيقاف الباجيناشن
+                                    info: false, // 🚫 إخفاء "Showing X to Y of Z entries"
+                                    ordering: true,
+                                    searching: false
+                                });
+                            });
+                        </script>
+
+                    </div>
+                    <br>
+                    <br>
+                </div>
+
+            </div>
+        </div>
+        <!-- / Content -->
+
+
+        
+
+        <div class="modal fade" id="basicModal2" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel1 " data-i18n="<?php echo e(__('admin.Delete')); ?>">
+                            <?php echo e(__('admin.Delete')); ?></h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <form method="POST" action="<?php echo e(route('supplier_invoice.destroy', 0)); ?>">
+                                <?php echo method_field('delete'); ?>
+                                <?php echo csrf_field(); ?>
+                                <div id="name" class=" col mb-3">
+
+                                    <?php echo e(__('admin.Are you sure you want to delete?')); ?>
+
+
+                                </div>
+                                <input class="val" type="hidden" name="id">
+
+
+                        </div>
+
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-label-secondary" data-bs-dismiss="modal"
+                            data-i18n="<?php echo e(__('admin.Close')); ?>"><?php echo e(__('admin.Close')); ?></button>
+                        <button type="submit" class="btn btn-danger"
+                            data-i18n="<?php echo e(__('admin.Delete')); ?>"><?php echo e(__('admin.Delete')); ?></button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+
+
+
+    <?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('admin.layout.app', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH D:\xampp\htdocs\laravel_test\pos\resources\views/admin/supplier_invoice/index.blade.php ENDPATH**/ ?>
